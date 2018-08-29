@@ -9,6 +9,7 @@ local urlcode = require"cgilua.urlcode"
 local lp = require"cgilua.lp"
 local lfs = require"lfs"
 local debug = require"debug"
+-- jrs - march 2018 - commented out this original code line. the new line exists without "unpack"
 -- local assert, error, ipairs, select, tostring, type, unpack, xpcall = assert, error, ipairs, select, tostring, type, unpack, xpcall
 local assert, error, ipairs, select, tostring, type, xpcall = assert, error, ipairs, select, tostring, type, xpcall
 local pairs = pairs
@@ -184,8 +185,10 @@ function M.pcall (f)
 	tremove(results, 1)
 	if ok then
 		if #results == 0 then results = { true } end
+                -- jrs - march 2018 - changed unpack to table.unpack to support lua 5.3
 		return table.unpack(results)
 	else
+                -- jrs - march 2018 - changed unpack to table.unpack to support lua 5.3
 		_erroroutput (table.unpack(results))
 	end
 end
