@@ -23,11 +23,25 @@ It seems that cgilua returns only one HTTP status code: 200. I found no way to s
 
 cgilua relies on wsapi. I modified the following files. My changes can be found by searching for "jrs".
 
-wsapi/sapi.lua - Added one line of code to support setting the returned HTTP status code
+**wsapi/sapi.lua** - Added one line of code to support setting the returned HTTP status code
 
-cgilua.lua - Added the new function `jrStatus` that takes one argument, which is the status code to return. To this file, I added code to support the PUT request type, which is used by my API code to indicate an update.
+**cgilua.lua** - Added the new function `jrStatus` that takes one argument, which is the status code to return. To this file, I also added code to support the PUT request type, which is used by my API code to indicate an update. And I changed the `unpack` command to be `table.unpack`, which makes the code compatible with Lua version 5.3.
 
-cgilua/post.lua
+**cgilua/post.lua** - Added support to receive content type application/json, which is used by my API code.
 
+My API code receives and sends JSON.
 
+When processing an update or a PUT request, my API code accesses the data sent by the client by using:
+
+    local json_text = cgilua.POST[1]
+
+... which is how my code accesses the data that's sent with a POST request.
+
+I chose not to add something like `cgilua.PUT`.
+
+This is how my API code uses my new `jrStatus` function.
+
+    local cgilua = require "cgilua"
+
+    cgilua.jrStatus(status)
 
